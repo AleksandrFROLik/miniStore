@@ -35,7 +35,7 @@ const Main: FC = () => {
             <button className='bg-transparent border-none'>
                 <img src={cartImage} alt='cart'/>
             </button>
-            <div className={cn('absolute  right-0 shadow-md  p-5 rounded-sm', {
+            <div className={cn('absolute  right-0 shadow-md  p-5 rounded-sm bg-white', {
                 hidden: !isShowCart
             })} style={{
                 top: '60px'
