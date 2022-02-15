@@ -21,11 +21,7 @@ export const CartReducer = (state= initialState, action: ActionCartType) => {
         }
         case  actionTypes.CART_REMOVE_ITEM: {
             {
-                const cart = [...state]
-                cart.forEach((item , index)=>{
-                    if(item._id===action.payload)cart.splice(index, 1)
-                })
-                return cart
+                return state.filter(item => item._id !== action.payload)
             }
         }
     }

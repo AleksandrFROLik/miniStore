@@ -4,25 +4,22 @@ import logoImage from '../../assets/images/logo.svg'
 import cartImage from '../../assets/images/cart.svg'
 import {ICartItem} from "../../types";
 import {v1} from "uuid";
+import {UseTypedSelector} from "../../hooks/useTypedSelector";
+import {useDispatch} from "react-redux";
+import {removeFromCart} from "../../store/Actions";
 
-const cartItems: ICartItem[] = [{
-    _id: v1(),
-    name: 'Ноутбук Lenovo ThinkPad P17 Gen 2',
-    imagePath: 'https://items.s1.citilink.ru/1635387_v01_b.jpg',
-    price: 3722,
-    count: 1
-}]
-
-const removeCartItemHandler = (id: string) => {
-    console.log('remove')
-}
 
 const Main: FC = () => {
     const [isShowCart, setIsShowCart] = useState(false)
-
-    const total = cartItems.reduce((acc, item) => {
+    const cart = UseTypedSelector(state => state.cart)
+    const dispatch = useDispatch()
+    const total = cart.reduce((acc, item) => {
         return acc + item.price
     }, 0)
+
+    const removeCartItemHandler = (id: string) => {
+        dispatch(removeFromCart(id))
+    }
 
     return (
         <div className='flex items-center justify-between relative  py-2 px-4'
@@ -32,8 +29,10 @@ const Main: FC = () => {
                  boxShadow: '1px 3px 30px 0px rgba(50, 50, 50, 0.75)'
              }}>
             <img src={logoImage} alt='logo' width='150'/>
-            <button className='bg-transparent border-none'>
+            <button className='bg-transparent border-none relative'>
                 <img src={cartImage} alt='cart'/>
+                <div
+                    className='text-red-500 absolute bottom-0 right-1 font-bold p-2 rounded-full bg-white w-5 h-5 flex items-center content-center'>{cart.length}</div>
             </button>
             <div className={cn('absolute  right-0 shadow-md  p-5 rounded-sm bg-white', {
                 hidden: !isShowCart
@@ -41,20 +40,21 @@ const Main: FC = () => {
                 top: '60px'
             }}>
                 {
-                    cartItems.map(item =>
-                        <div className='flex items-center' key={item._id}>
+                    cart.map(item =>
+                        <div className='flex items-center mb-4' key={item._id}>
                             <img src={item.imagePath} alt={item.name} width='55' height='55'/>
                             <div className='pl-5'>
                                 <div>{item.name}</div>
-                                <div>{`${item.count} x ${item.price}`}</div>
+                                <div>{`${item.count} x ${item.price.toLocaleString()}`}</div>
                                 <button className='text-red-600 bg-transparent border-0'
-                                        onClick={()=>removeCartItemHandler(item._id)}
-                                >delete</button>
+                                        onClick={() => removeCartItemHandler(item._id)}
+                                >delete
+                                </button>
                             </div>
                         </div>
                     )}
                 <div className='text-lg border-solid border-t-2 border-red-200 pt-1 mt-2'>
-                    Total:<b>{total}</b>
+                    Total:<b>{total.toLocaleString()}</b>
                 </div>
 
             </div>
