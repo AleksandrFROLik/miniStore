@@ -8,8 +8,6 @@ function App() {
         <div>
             <Main/>
             <Goods/>
-            <Main/>
-            <Goods/>
         </div>
     );
 }
